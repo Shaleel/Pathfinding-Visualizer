@@ -13,8 +13,10 @@ interface NodeMetaData {
 }
 
 const Node = styled.div<NodeMetaData>`
-    width: ${window.innerWidth / 30}px;
-    height: ${window.innerHeight / 30}px;
+    /* width: ${window.innerWidth / 30}px;
+    height: ${window.innerHeight / 30}px; */
+    width: 2rem;
+    height: 2rem;
     border: 1px solid #6c5cff50;
     display: flex;
     justify-content: center;
@@ -31,7 +33,15 @@ function Board() {
     const [{ grid }, dispatch] = useStateValue();
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '650px',
+                width: '1200px',
+                margin: 'auto'
+            }}
+        >
             {grid.map((row: Array<NodeMetaData>, idx: number) => (
                 <div style={{ display: 'flex', flex: 1 }} key={idx}>
                     {row.map(

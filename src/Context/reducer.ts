@@ -1,5 +1,7 @@
-const WIDTH = window.innerWidth / 30;
-const HEIGHT = window.innerHeight / 35;
+// const WIDTH = window.innerWidth / 30;
+// const HEIGHT = window.innerHeight / 35;
+const WIDTH = 32;
+const HEIGHT = 20;
 const SOURCE = {
     row: Math.floor(HEIGHT / 2),
     column: Math.floor(WIDTH / 2 / 2)

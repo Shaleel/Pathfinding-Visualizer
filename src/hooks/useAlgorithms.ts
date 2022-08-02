@@ -6,6 +6,10 @@ interface AStarMeta extends NodeMetaData {
     h: number;
     f: number;
 }
+interface PredecessorMeta {
+    row: number;
+    column: number;
+}
 export default function () {
     const [{ grid, WIDTH, HEIGHT, SOURCE, DESTINATION }, dispatch] =
         useStateValue();
@@ -42,11 +46,14 @@ export default function () {
     };
 
     const updatePredecessor = (
-        predecessors: Array<Array<NodeMetaData | null>>,
+        predecessors: Array<Array<PredecessorMeta | null>>,
         srcNode: NodeMetaData,
         currNode: NodeMetaData
     ) => {
-        predecessors[currNode.row][currNode.column] = srcNode;
+        predecessors[currNode.row][currNode.column] = {
+            row: srcNode.row,
+            column: srcNode.column
+        };
     };
 
     const Speed = (speed: 'slow' | 'average' | 'fast') => {
@@ -93,7 +100,7 @@ export default function () {
         });
     };
 
-    const getShortestPath = (predecessors: Array<Array<NodeMetaData>>) => {
+    const getShortestPath = (predecessors: Array<Array<PredecessorMeta>>) => {
         let pathInOrder = [];
         let curr = predecessors[DESTINATION.row][DESTINATION.column];
         pathInOrder.push(grid[DESTINATION.row][DESTINATION.column]);
@@ -101,7 +108,7 @@ export default function () {
         while (curr !== null) {
             let row = curr?.row;
             let column = curr?.column;
-            pathInOrder.push(predecessors[row][column]);
+            pathInOrder.push({ row: row, column: column });
             curr = predecessors[row][column];
         }
 
@@ -170,7 +177,7 @@ export default function () {
             // let distances = [...Array(grid.length)].map((cell) =>
             //     Array(grid[0].length).fill(Number.MAX_SAFE_INTEGER)
             // );
-            let predecessors = <Array<Array<NodeMetaData>>>(
+            let predecessors = <Array<Array<PredecessorMeta>>>(
                 [...Array(grid.length)].map((cell) =>
                     Array(grid[0].length).fill(null)
                 )
@@ -182,7 +189,10 @@ export default function () {
                 let top = queue.shift(); //return top
                 if (!top?.isVisited && !top?.isBlocked) {
                     markVisited(top);
-                    visitedInOrder.push(top);
+                    visitedInOrder.push({
+                        row: top.row,
+                        column: top.column
+                    });
 
                     if (top?.isDestination) {
                         break;
@@ -198,7 +208,6 @@ export default function () {
                     }
                 });
             }
-
             return {
                 visitedInOrder,
                 gridCopy,
@@ -237,7 +246,10 @@ export default function () {
                 let top = stack.pop();
                 if (!top?.isVisited && !top?.isBlocked) {
                     markVisited(top);
-                    visitedInOrder.push(top);
+                    visitedInOrder.push({
+                        row: top.row,
+                        column: top.column
+                    });
 
                     if (top?.isDestination) {
                         break;
